@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>民事法律助手 · 完整版</title>
+    <style>
+        :root {
+            --primary: #0A2540;
+            --surface: #FFFFFF;
+            --accent: #00B4D8;
+            --accent-gradient: linear-gradient(135deg, #00B4D8, #0077B6);
+            --bg: #F5F7FA;
+            --text: #1E293B;
+            --text-secondary: #64748B;
+            --text-tertiary: #94A3B8;
+            --border: #E2E8F0;
+            --border-light: #F1F5F9;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+            --radius: 18px;
+            --radius-lg: 24px;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+        }
+        .dark-mode {
+            --primary: #0F1B2D;
+            --surface: #1E293B;
+            --bg: #0F172A;
+            --text: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --text-tertiary: #64748B;
+            --border: #334155;
+            --border-light: #1E293B;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+        .phone-frame {
+            width: 393px;
+            height: 852px;
+            background: #000;
+            border-radius: 44px;
+            overflow: hidden;
+            box-shadow: 0 0 0 3px #1a1a1a, 0 0 0 6px #333, 0 30px 60px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .status-bar-ios {
+            height: 54px;
+            background: var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 0 28px 8px;
+            color: #FFF;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 99;
+            flex-shrink: 0;
+        }
+        .app-screen {
+            flex: 1;
+            background: var(--bg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .page-container {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            background: var(--bg);
+        }
+        .page-container::-webkit-scrollbar {
+            display: none;
+        }
+        .page {
+            display: none;
+            min-height: 100%;
+            background: var(--bg);
+            padding: 0 0 40px;
+            animation: fadeIn 0.3s ease;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes shimmer {
+            0% {
+                background-position: -200px 0;
+            }
+            100% {
+                background-position: calc(200px + 100%) 0;
+            }
+        }
+        .tab-bar {
+            background: var(--surface);
+            border-top: 0.5px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 4px 4px 18px;
+            backdrop-filter: blur(30px);
+            z-index: 90;
+            flex-shrink: 0;
+            gap: 2px;
+        }
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+            font-size: 9px;
+            font-weight: 500;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            padding: 3px 5px;
+            border-radius: 14px;
+            transition: 0.2s;
+            min-width: 44px;
+            position: relative;
+        }
+        .tab-item.active {
+            color: var(--accent);
+            font-weight: 700;
+        }
+        .tab-item.active::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            width: 14px;
+            height: 2px;
+            background: var(--accent-gradient);
+            border-radius: 1px;
+        }
+        .tab-icon {
+            font-size: 19px;
+            line-height: 1;
+        }
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 15px;
+            box-shadow: var(--shadow);
+            margin: 5px 14px 8px;
+            border: 0.5px solid var(--border-light);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .card:active {
+            transform: scale(0.985);
+        }
+        .card-accent {
+            background: var(--accent-gradient);
+            color: #FFF;
+            border: none;
+        }
+        .card-accent .text-secondary {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            border: none;
+            background: var(--accent-gradient);
+            color: #FFF;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .btn:active {
+            transform: scale(0.94);
+            opacity: 0.8;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid var(--accent);
+            color: var(--accent);
+        }
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 10px;
+            border-radius: 14px;
+        }
+        .btn-lg {
+            padding: 14px 22px;
+            font-size: 14px;
+            border-radius: 24px;
+            width: 100%;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text);
+            padding: 10px 16px 2px;
+            letter-spacing: -0.2px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
+            padding: 0 14px;
+            margin: 4px 0;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 5px;
+            padding: 0 14px;
+            margin: 4px 0;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 4px;
+            padding: 0 14px;
+            margin: 4px 0;
+        }
+        .entry-card {
+            background: var(--surface);
+            border-radius: 14px;
+            padding: 12px 4px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            font-weight: 600;
+            font-size: 11px;
+            color: var(--text);
+            cursor: pointer;
+            border: 0.5px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+        .entry-card:active {
+            background: #F0F9FF;
+            transform: scale(0.95);
+        }
+        .entry-icon {
+            font-size: 24px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 7px;
+            border-radius: 9px;
+            font-size: 9px;
+            font-weight: 600;
+        }
+        .badge-ai {
+            background: #E0F7FF;
+            color: #0077B6;
+        }
+        .badge-warning {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+        .badge-danger {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+        .badge-success {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+        .badge-info {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+        .search-bar {
+            background: var(--surface);
+            border-radius: 24px;
+            padding: 11px 14px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            box-shadow: var(--shadow);
+            margin: 6px 14px;
+            border: 1px solid var(--border-light);
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        .input-field {
+            width: 100%;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 13px;
+            background: var(--surface);
+            color: var(--text);
+            font-family: inherit;
+            outline: none;
+            margin-bottom: 7px;
+        }
+        .input-field:focus {
+            border-color: var(--accent);
+        }
+        .textarea-field {
+            width: 100%;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 13px;
+            background: var(--surface);
+            color: var(--text);
+            font-family: inherit;
+            resize: vertical;
+            min-height: 80px;
+            outline: none;
+        }
+        .textarea-field:focus {
+            border-color: var(--accent);
+        }
+        .score-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 4px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 10px auto;
+            box-shadow: 0 0 20px rgba(0, 180, 216, 0.2);
+        }
+        .progress-bar {
+            height: 4px;
+            background: var(--border-light);
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 5px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 2px;
+            background: var(--accent-gradient);
+            transition: width 0.5s ease;
+        }
+        .nav-header {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 14px;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text);
+            position: sticky;
+            top: 0;
+            background: var(--bg);
+            z-index: 10;
+            backdrop-filter: blur(20px);
+        }
+        .nav-back {
+            width: 28px;
+            height: 28px;
+            border-radius: 14px;
+            background: var(--surface);
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-back:active {
+            transform: scale(0.85);
+        }
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 6px 10px;
+            border-radius: 14px;
+            font-size: 11px;
+            font-weight: 500;
+            background: var(--border-light);
+            color: var(--text);
+            cursor: pointer;
+            margin: 1px;
+        }
+        .chip.active {
+            background: #E0F7FF;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .toast {
+            position: fixed;
+            top: 65px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1E293B;
+            color: #FFF;
+            padding: 9px 18px;
+            border-radius: 18px;
+            font-weight: 600;
+            font-size: 12px;
+            z-index: 9999;
+            animation: toastIn 0.3s ease, toastOut 0.3s ease 1.6s forwards;
+            pointer-events: none;
+        }
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        @keyframes toastOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-14px);
+            }
+        }
+        .compare-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 3px;
+            font-size: 10px;
+            text-align: center;
+        }
+        .compare-table div {
+            padding: 7px 3px;
+            background: var(--border-light);
+            border-radius: 6px;
+        }
+        .compare-table .header-col {
+            font-weight: 700;
+            background: transparent;
+            text-align: left;
+        }
+        .intake-hero {
+            margin: 8px 14px 10px;
+            padding: 22px 18px;
+            border-radius: 26px;
+            color: #FFF;
+            background: radial-gradient(circle at 20% 10%, rgba(0,180,216,.45), transparent 28%), linear-gradient(145deg, #071A2F, #123A5A 55%, #006D8F);
+            box-shadow: 0 18px 45px rgba(0, 119, 182, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+        .intake-hero::after {
+            content: '';
+            position: absolute;
+            right: -40px;
+            top: -40px;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,.18);
+        }
+        .ai-orb {
+            width: 54px;
+            height: 54px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            background: rgba(255,255,255,.16);
+            border: 1px solid rgba(255,255,255,.2);
+            box-shadow: inset 0 0 20px rgba(255,255,255,.08);
+        }
+        .case-cover {
+            width: 46px;
+            height: 46px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFF;
+            font-size: 22px;
+            background: var(--accent-gradient);
+            flex-shrink: 0;
+        }
+        .chat-page {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 0;
+            background: linear-gradient(180deg, var(--bg), #EAF6FB);
+        }
+        .chat-list {
+            padding: 10px 14px 135px;
+        }
+        .msg-row {
+            display: flex;
+            gap: 8px;
+            margin: 9px 0;
+            animation: fadeIn .28s ease;
+        }
+        .msg-row.user {
+            justify-content: flex-end;
+        }
+        .avatar-ai {
+            width: 30px;
+            height: 30px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent-gradient);
+            color: #FFF;
+            flex-shrink: 0;
+        }
+        .bubble {
+            max-width: 78%;
+            padding: 10px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            line-height: 1.55;
+            box-shadow: var(--shadow);
+            background: var(--surface);
+            color: var(--text);
+        }
+        .msg-row.user .bubble {
+            color: #FFF;
+            background: var(--accent-gradient);
+            border-bottom-right-radius: 5px;
+        }
+        .msg-row.ai .bubble {
+            border-bottom-left-radius: 5px;
+        }
+        .typing-dot {
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            margin: 0 2px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: pulse 1s infinite;
+        }
+        .intake-panel {
+            position: sticky;
+            bottom: 0;
+            padding: 8px 12px 12px;
+            background: linear-gradient(180deg, transparent, var(--bg) 24%);
+            z-index: 15;
+        }
+        .upload-tools {
+            display: flex;
+            gap: 5px;
+            overflow-x: auto;
+            padding: 6px 2px;
+        }
+        .summary-mini {
+            margin: 8px 14px;
+            padding: 12px;
+            border-radius: 18px;
+            background: rgba(0,180,216,.09);
+            border: 1px solid rgba(0,180,216,.22);
+        }
+        .plan-card {
+            border-left: 4px solid var(--accent);
+        }
+        @media (max-width: 420px) { 
+            .phone-frame {
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            body {
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame" id="phoneFrame">
+        <div class="status-bar-ios" id="statusBar"><span>9:41</span><span>民事法律助手</span><span>📶 🔋</span></div>
+        <div class="app-screen">
+            <div class="page-container" id="pageContainer"></div>
+            <div class="tab-bar" id="tabBar">
+                <div class="tab-item active" data-tab="home"><span class="tab-icon">🏠</span>首页</div>
+                <div class="tab-item" data-tab="evidence"><span class="tab-icon">📁</span>证据</div>
+                <div class="tab-item" data-tab="ai"><span class="tab-icon">🤖</span>AI助手</div>
+                <div class="tab-item" data-tab="law"><span class="tab-icon">⚖️</span>法律服务</div>
+                <div class="tab-item" data-tab="profile"><span class="tab-icon">👤</span>我的</div>
+            </div>
+        </div>
+    </div>
+    <div id="toastContainer"></div>
+
+    <script>
+        (function() {
+            const pageContainer = document.getElementById('pageContainer');
+            const tabBar = document.getElementById('tabBar');
+            const toastContainer = document.getElementById('toastContainer');
+            let currentTab = 'home';
+            let pageHistory = [];
+            let currentPageId = 'splash';
+            let isDarkMode = true;
+            let intakeStep = 0;
+            let activeCaseMode = null;
+            let intakeCase = {
+                title: '朋友借款5万元未还', type: '民间借贷纠纷', amount: '¥50,000', stage: 'AI接案中', health: 72,
+                evidence: ['借条', '微信聊天记录', '转账记录'], missing: ['银行流水', '催款录音'], updated: '刚刚更新'
+            };
+            document.body.classList.add('dark-mode');
+            document.getElementById('phoneFrame').style.background = '#0F172A';
+
+            function showToast(msg) {
+                const t = document.createElement('div');
+                t.className = 'toast';
+                t.textContent = msg;
+                toastContainer.appendChild(t);
+                setTimeout(() => t.remove(), 2000);
+            }
+
+            function navigateTo(pageId, data = {}) {
+                pageHistory.push({ tab: currentTab, page: currentPageId });
+                currentPageId = pageId;
+                renderPage(pageId, data);
+                pageContainer.scrollTop = 0;
+            }
+
+            function goBack() {
+                if (activeCaseMode && currentPageId !== activeCaseMode) {
+                    currentPageId = activeCaseMode;
+                    renderPage(activeCaseMode);
+                    return;
+                }
+                if (pageHistory.length > 0) {
+                    const prev = pageHistory.pop();
+                    currentPageId = prev.page;
+                    if (prev.tab !== currentTab) switchTab(prev.tab, true);
+                    else renderPage(prev.page);
+                } else { switchTab('home', true); }
+            }
+
+            function switchTab(tabId, silent = false) {
+                activeCaseMode = null;
+                if (!silent && tabId === currentTab) return;
+                currentTab = tabId;
+                pageHistory = [];
+                currentPageId = null;
+                tabBar.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+                const at = tabBar.querySelector(`[data-tab="${tabId}"]`);
+                if (at) at.classList.add('active');
+                const pages = { home: 'home', evidence: 'evidence-center', ai: 'ai-diagnosis', law: 'law-center',
+                    profile: 'profile' };
+                renderPage(pages[tabId] || 'home');
+                pageContainer.scrollTop = 0;
+            }
+
+            function renderPage(pageId, data = {}) {
+                pageContainer.innerHTML = '';
+                const page = document.createElement('div');
+                page.className = 'page active';
+                page.id = 'page-' + pageId;
+                const builders = {
+                    'splash': buildSplash,
+                    'home': buildHome,
+                    'ai-intake': buildAIIntake,
+                    'my-cases': buildMyCases,
+                    'case-report': buildCaseReport,
+                    'rights-plan': buildRightsPlan,
+                    'negotiation-assistant': buildNegotiationAssistant,
+                    'litigation-mode': buildLitigationMode,
+                    'login': buildLogin,
+                    'register': buildRegister,
+                    'search': buildSearch,
+                    'search-result': buildSearchResult,
+                    'ai-diagnosis': buildAIDiag,
+                    'ai-diagnosis-result': buildAIDiagResult,
+                    'ai-health': buildAIHealth,
+                    'evidence-center': buildEvidenceCenter,
+                    'evidence-upload': buildEvUpload,
+                    'evidence-ocr': buildEvOCR,
+                    'evidence-analysis': buildEvAnalysis,
+                    'evidence-gap': buildEvGap,
+                    'evidence-timeline': buildEvTimeline,
+                    'evidence-graph': buildEvGraph,
+                    'lawsuit-nav': buildLawsuitNav,
+                    'limitation': buildLimitation,
+                    'document-gen': buildDocGen,
+                    'document-edit': buildDocEdit,
+                    'mock-court': buildMockCourt,
+                    'mock-judge': buildMockJudge,
+                    'mock-defendant': buildMockDef,
+                    'fee-calc': buildFeeCalc,
+                    'court-find': buildCourtFind,
+                    'lawyer': buildLawyer,
+                    'roadmap': buildRoadmap,
+                    'tasks': buildTasks,
+                    'archive': buildArchive,
+                    'knowledge': buildKnowledge,
+                    'knowledge-graph': buildKnowledgeGraph,
+                    'emotion': buildEmotion,
+                    'enterprise': buildEnterprise,
+                    'enterprise-report': buildEntReport,
+                    'contract-review-ai': buildContractReviewAI,
+                    'calendar': buildCalendar,
+                    'profile': buildProfile,
+                    'settings': buildSettings,
+                    'privacy': buildPrivacy,
+                    'messages': buildMessages,
+                    'help': buildHelp,
+                    'law-center': buildLawCenter,
+                    'nearby-firms': buildNearbyFirms,
+                    'lawyer-recommend': buildLawyerRec,
+                    'fee-analysis': buildFeeAnalysis,
+                    'fee-quote-check': buildFeeQuote,
+                    'contract-review': buildContractReview,
+                    'lawyer-comm': buildLawyerComm,
+                    'consult-records': buildConsultRecords,
+                    'lawyer-compare': buildLawyerCompare,
+                    'fee-budget': buildFeeBudget,
+                    'risk-warning': buildRiskWarning,
+                    'law-score': buildLawScore,
+                    'second-opinion': buildSecondOpinion,
+                    'case-readiness': buildCaseReadiness,
+                    'lawyer-sim': buildLawyerSim,
+                    'empty': buildEmpty,
+                    'loading': buildLoading,
+                    'error': buildError,
+                    'notfound': buildNotFound,
+                };
+                if (builders[pageId]) builders[pageId](page, data);
+                else {
+                    goBack();
+                    return;
+                }
+                pageContainer.appendChild(page);
+            }
+
+            // ===================== 启动页 =====================
+            function buildSplash(page) {
+                page.style.background = 'var(--primary)';
+                page.style.display = 'flex';
+                page.style.flexDirection = 'column';
+                page.style.alignItems = 'center';
+                page.style.justifyContent = 'center';
+                page.style.minHeight = '100%';
+                page.style.color = '#FFF';
+                page.innerHTML = `
+                <div style="font-size:50px;animation:pulse 2s infinite;">⚖️</div>
+                <h1 style="font-size:26px;font-weight:800;">民事法律助手</h1>
+                <p style="opacity:0.7;font-size:13px;">AI-Powered Legal Assistant</p>
+                <p style="position:absolute;bottom:55px;font-size:10px;opacity:0.5;">不构成法律意见·请咨询执业律师</p>
+              `;
+                setTimeout(() => { if (currentPageId === 'splash') switchTab('home'); }, 2000);
+            }
+
+            // ===================== 登录/注册 =====================
+            function buildLogin(page) {
+                page.innerHTML = `
+                <div style="text-align:center;padding:50px 20px;">
+                  <p style="font-size:40px;">⚖️</p><h2>民事法律助手</h2>
+                  <input class="input-field" placeholder="手机号" style="margin-top:20px;">
+                  <input class="input-field" placeholder="验证码">
+                  <div class="btn btn-lg" style="margin-top:12px;" onclick="switchTab('home');showToast('登录成功')">登录</div>
+                  <p style="margin-top:12px;font-size:12px;color:var(--text-secondary);cursor:pointer;" onclick="navigateTo('register')">还没有账号？注册</p>
+                </div>`;
+            }
+
+            function buildRegister(page) {
+                page.innerHTML = `
+                <div style="text-align:center;padding:50px 20px;">
+                  <h2>注册</h2><input class="input-field" placeholder="手机号"><input class="input-field" placeholder="设置密码">
+                  <div class="btn btn-lg" onclick="navigateTo('login');showToast('注册成功，请登录')">注册</div>
+                </div>`;
+            }
+
+            // ===================== 首页 · AI法律接案官 =====================
+            function buildHome(page) {
+                page.innerHTML = `
+                <div style="padding:10px 14px 0;display:flex;align-items:center;justify-content:space-between;">
+                  <div><p style="font-size:11px;color:var(--text-secondary);">AI Legal Intake</p><h2 style="font-size:20px;">AI法律接案官</h2></div>
+                  <span class="badge badge-ai">案件驱动</span>
+                </div>
+                <div style="padding:8px 14px 0;"><div class="btn btn-lg" onclick="navigateTo('ai-intake')">＋ 添加我的案件</div></div>
+                <div class="intake-hero">
+                  <div style="display:flex;gap:12px;align-items:center;position:relative;z-index:1;">
+                    <div class="ai-orb">⚖️</div>
+                    <div><h2 style="font-size:20px;margin-bottom:5px;">你好，我是你的AI法律助手。</h2><p style="font-size:12px;line-height:1.7;opacity:.86;">告诉我发生了什么，我会一步一步帮你梳理案件，并制定最适合你的维权方案。</p></div>
+                  </div>
+                  <div style="display:flex;gap:8px;margin-top:18px;position:relative;z-index:1;">
+                    <div class="btn" style="flex:1;background:#FFF;color:#0A2540;" onclick="navigateTo('ai-intake')">开始创建案件</div>
+                    <div class="btn btn-outline" style="flex:1;border-color:rgba(255,255,255,.7);color:#FFF;" onclick="navigateTo('my-cases')">查看我的案件</div>
+                  </div>
+                </div>
+                <div class="section-title">我的案件</div>
+                <div class="card" onclick="navigateTo('case-report')" style="display:flex;gap:12px;align-items:center;">
+                  <div class="case-cover">💰</div><div style="flex:1;"><strong>${intakeCase.title}</strong><p style="font-size:11px;color:var(--text-secondary);margin-top:3px;">${intakeCase.type} · ${intakeCase.stage}</p><div class="progress-bar"><div class="progress-fill" style="width:${intakeCase.health}%;"></div></div></div><span style="color:var(--text-tertiary);">→</span>
+                </div>
+                <div class="section-title">建案后可无缝进入</div>
+                <div class="grid-2">
+                  <div class="card" onclick="navigateTo('evidence-center')">AI证据管理</div>
+                  <div class="card" onclick="navigateTo('rights-plan')">维权策略</div>
+                  <div class="card" onclick="navigateTo('lawsuit-nav')">诉讼助手</div>
+                  <div class="card" onclick="navigateTo('law-center')">律师服务</div>
+                </div>`;
+            }
+
+            // ===================== AI对话建案 =====================
+            function buildAIIntake(page) {
+                page.className = 'page active chat-page';
+                intakeStep = 0;
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>AI法律接案官<span class="badge badge-ai" style="margin-left:auto;">实时建案</span></div>
+                <div class="summary-mini" id="intakeSummary"><strong>案件摘要实时生成</strong><p style="font-size:11px;color:var(--text-secondary);margin-top:5px;">案件类型待识别，证据和时间线将随对话更新。</p></div>
+                <div class="chat-list" id="chatList"></div>
+                <div class="intake-panel">
+                  <div class="upload-tools"><span class="chip" onclick="showToast('已添加图片上传入口')">图片</span><span class="chip" onclick="showToast('已添加聊天记录上传入口')">聊天记录</span><span class="chip" onclick="showToast('已添加合同上传入口')">合同</span><span class="chip" onclick="showToast('已添加录音上传入口')">录音</span><span class="chip" onclick="showToast('已添加视频上传入口')">视频</span></div>
+                  <div style="display:flex;gap:7px;align-items:center;"><button class="nav-back" onclick="showToast('语音输入中')">🎤</button><input class="input-field" id="intakeInput" style="margin:0;" placeholder="请描述发生了什么…" value="朋友借了我5万元，一直拖着不还"><button class="btn btn-sm" onclick="sendIntakeMsg()">发送</button></div>
+                </div>`;
+                setTimeout(() => {
+                    addMsg('ai', '您好，请简单描述一下发生了什么事情。比如：朋友借了我5万元一直不还、公司拖欠工资、交通事故对方拒赔。');
+                }, 200);
+            }
+
+            function addMsg(role, text) {
+                const list = document.getElementById('chatList');
+                if (!list) return;
+                const row = document.createElement('div');
+                row.className = `msg-row ${role}`;
+                row.innerHTML = role === 'ai' ? `<div class="avatar-ai">AI</div><div class="bubble">${text}</div>` : `<div class="bubble">${text}</div>`;
+                list.appendChild(row);
+                pageContainer.scrollTop = pageContainer.scrollHeight;
+            }
+
+            function updateIntakeSummary(step) {
+                const el = document.getElementById('intakeSummary');
+                if (!el) return;
+                const maps = [
+                    '已识别：民间借贷纠纷。正在确认金额、时间和还款约定。',
+                    '案件名称：朋友借款5万元未还；涉案金额：¥50,000；关键证据：借条、聊天记录、转账记录。',
+                    '缺失证据：银行流水、催款录音；风险：对方抗辩已还款或赠与；健康度：72%。'
+                ];
+                el.innerHTML = `<strong>案件摘要实时生成</strong><p style="font-size:11px;color:var(--text-secondary);margin-top:5px;">${maps[Math.min(step, maps.length - 1)]}</p>`;
+            }
+
+            function sendIntakeMsg() {
+                const input = document.getElementById('intakeInput');
+                const value = input?.value.trim();
+                if (!value) return;
+                addMsg('user', value);
+                input.value = '';
+                addMsg('ai', '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>');
+                const replies = [
+                    '我初步判断这是民间借贷纠纷。没关系，我们一步一步来。请问借款发生在什么时间？有没有借条或聊天记录？',
+                    '好的，我已经记录。请问约定什么时候归还？你是否催过款？如果不确定也没关系，后续可以补充。',
+                    '信息已经比较完整。我会为你整理案件事实、时间轴、证据目录和缺失证据，并生成维权方案。'
+                ];
+                setTimeout(() => {
+                    const last = document.querySelector('#chatList .msg-row:last-child');
+                    if (last) last.remove();
+                    addMsg('ai', replies[Math.min(intakeStep, replies.length - 1)]);
+                    updateIntakeSummary(intakeStep);
+                    intakeStep++;
+                    if (intakeStep >= 3) {
+                        setTimeout(() => addMsg('ai', '<div><strong>案件分析报告已生成。</strong><p style="margin:6px 0;">你可以查看完整报告，或直接选择维权方式。</p><div class="btn btn-sm" onclick="navigateTo(\'case-report\')">查看案件分析报告</div> <div class="btn btn-outline btn-sm" onclick="navigateTo(\'rights-plan\')">选择维权方案</div></div>'), 400);
+                    }
+                }, 700);
+            }
+
+            function buildMyCases(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>我的案件<div class="btn btn-sm" style="margin-left:auto;" onclick="navigateTo('ai-intake')">新增案件</div></div>
+                ${[intakeCase,{title:'劳动工资拖欠',type:'劳动争议',amount:'¥18,000',stage:'待补证',health:58,updated:'昨天更新'}].map(c=>`
+                <div class="card" onclick="navigateTo('case-report')" style="display:flex;gap:12px;align-items:center;"><div class="case-cover">${c.type.includes('劳动')?'👷':'💰'}</div><div style="flex:1;"><strong>${c.title}</strong><p style="font-size:11px;color:var(--text-secondary);">${c.type} · ${c.stage} · ${c.updated}</p><div class="progress-bar"><div class="progress-fill" style="width:${c.health}%;"></div></div><p style="font-size:10px;color:var(--text-secondary);">案件健康度 ${c.health}%</p></div><span>→</span></div>`).join('')}`;
+            }
+
+            function buildCaseReport(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>案件分析报告</div>
+                <div class="card" style="text-align:center;"><div class="score-circle">72</div><p>案件健康度</p><span class="badge badge-warning">证据需补强</span></div>
+                <div class="card"><strong>案件基本信息</strong><p>案件名称：朋友借款5万元未还</p><p>案件类型：民间借贷纠纷</p><p>涉案金额：¥50,000</p></div>
+                <div class="card"><strong>案件事实与时间轴</strong><p>2023-08 借款并转账</p><p>2024-08 约定还款期限届满</p><p>2025-01 多次催款未果</p></div>
+                <div class="grid-2"><div class="card"><strong>已有证据</strong><p>借条、聊天记录、转账记录</p></div><div class="card"><strong>缺失证据</strong><p>银行流水、催款录音</p></div></div>
+                <div class="card"><strong>争议焦点</strong><p>借款关系是否成立、款项是否已实际交付、是否存在还款或赠与抗辩。</p></div>
+                <div class="card"><strong>AI风险提示</strong><p>建议补充银行流水，并保留后续催款记录以证明诉讼时效中断。</p></div>
+                <div style="padding:0 14px;display:flex;gap:7px;"><div class="btn btn-sm" onclick="navigateTo('rights-plan')">查看维权方案</div><div class="btn btn-outline btn-sm" onclick="navigateTo('evidence-center')">整理证据</div></div>`;
+            }
+
+            function buildRightsPlan(page) {
+                const plans = [{t:'协商解决',s:'★★★★★',d:'成本最低、周期最短，建议先尝试。',go:'negotiation-assistant'},{t:'发送律师函',s:'★★★★☆',d:'适用于仍有沟通空间的案件。',go:'document-gen'},{t:'申请人民调解',s:'★★★★☆',d:'适用于邻里、婚姻、消费等纠纷。',go:'law-center'},{t:'申请劳动仲裁',s:'按案适用',d:'劳动争议优先选择。',go:'lawsuit-nav'},{t:'提起民事诉讼',s:'★★★★★',d:'证据较充分且协商无果时适用。',go:'litigation-mode'},{t:'咨询律师',s:'★★★★☆',d:'AI已整理摘要、证据目录和时间轴。',go:'lawyer-recommend'}];
+                page.innerHTML = `<div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>AI维权策略</div><div class="card card-accent"><strong>AI建议优先方案：先协商，保留催款证据；无果后准备起诉。</strong><p style="font-size:11px;opacity:.85;margin-top:5px;">请选择希望继续采取的维权方式。</p></div>${plans.map(p=>`<div class="card plan-card" onclick="navigateTo('${p.go}')"><div style="display:flex;justify-content:space-between;"><strong>${p.t}</strong><span style="color:var(--warning);">${p.s}</span></div><p style="font-size:11px;color:var(--text-secondary);margin:5px 0;">预计耗时：7-30天 · 预计费用：低至中等</p><p>${p.d}</p><p style="font-size:11px;color:var(--accent);margin-top:5px;">AI推荐理由：与当前证据完整度和沟通空间匹配。</p></div>`).join('')}<div class="card" onclick="navigateTo('my-cases')">保存案件以后再处理</div>`;
+            }
+
+            function buildNegotiationAssistant(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>协商助手</div>
+                <div class="card"><strong>催款话术</strong><p>张三，你于2023年8月向我借款5万元，约定一年归还。请于7日内偿还，否则我将依法通过调解或诉讼维护权利。</p></div>
+                <div class="card"><strong>协商方案</strong><p>方案A：一次性还款；方案B：分2期还款并补签还款计划。</p></div>
+                <div class="card"><strong>和解协议模板</strong><p>双方确认借款本金5万元，债务人承诺于指定日期前归还。</p></div>
+                <div class="card"><strong>协商记录</strong><p>每次沟通后自动记录时间、内容和对方态度，作为后续证据。</p></div>`;
+            }
+
+            function buildLitigationMode(page) {
+                activeCaseMode = 'litigation-mode';
+                pageHistory = [];
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>诉讼辅助模式<span class="badge badge-ai" style="margin-left:auto;">已关联案件</span></div>
+                <div class="card card-accent"><strong>已进入民事诉讼引导流程</strong><p style="font-size:11px;opacity:.85;margin-top:5px;">AI已把案件摘要、证据目录和时间轴带入诉讼模块，下面按起诉前准备顺序继续处理。</p></div>
+                <div class="grid-2">
+                  <div class="card" onclick="navigateTo('evidence-center')">📎 AI证据整理</div>
+                  <div class="card" onclick="navigateTo('lawsuit-nav')">📋 诉讼流程导航</div>
+                  <div class="card" onclick="navigateTo('limitation')">⏳ 诉讼时效计算</div>
+                  <div class="card" onclick="navigateTo('document-gen')">📝 法律文书生成</div>
+                  <div class="card" onclick="navigateTo('court-find')">📍 法院查询</div>
+                  <div class="card" onclick="navigateTo('lawyer-recommend')">👨‍⚖️ 律师推荐</div>
+                  <div class="card" onclick="navigateTo('fee-analysis')">💰 律师收费分析</div>
+                  <div class="card" onclick="navigateTo('tasks')">📌 案件任务中心</div>
+                  <div class="card" onclick="navigateTo('roadmap')">🗺️ 案件路线图</div>
+                  <div class="card" onclick="navigateTo('mock-court')">🏛️ AI模拟法庭</div>
+                  <div class="card" onclick="navigateTo('archive')">📂 案件档案</div>
+                </div>`;
+            }
+
+            // ===================== 搜索 =====================
+             function buildSearch(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>AI智能搜索</div>
+                <div style="padding:0 14px;"><input class="input-field" placeholder="描述您遇到的问题…" autofocus>
+                <div style="display:flex;gap:4px;flex-wrap:wrap;"><span class="chip">📷图片</span><span class="chip">📎合同</span><span class="chip">💬聊天记录</span><span class="chip">🎤语音</span></div>
+                <div class="btn btn-lg" style="margin-top:10px;" onclick="navigateTo('search-result')">🔍 AI分析</div></div>`;
+            }
+
+            function buildSearchResult(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>分析结果</div>
+                <div class="card"><span class="badge badge-ai">AI判断</span><p>案件类型：民间借贷纠纷</p><p>涉及法律：《民法典》第667条</p><div class="btn btn-sm" onclick="navigateTo('ai-diagnosis')">完整诊断</div></div>`;
+            }
+
+            // ===================== AI诊断 =====================
+            function buildAIDiag(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>🤖 AI案件诊断</div>
+                <div class="card"><p style="font-weight:600;">请描述案件经过：</p>
+                <textarea class="textarea-field" id="diagInput">2023年8月朋友张三借5万元，微信转账，有借条，约定一年还，至今未还。</textarea>
+                <div class="btn btn-lg" style="margin-top:8px;" onclick="startDiag()">🔬 开始AI分析</div></div>
+                <div class="card" id="diagLoading" style="display:none;text-align:center;"><p>⏳ AI分析中…</p><div class="progress-bar"><div class="progress-fill" style="width:60%;animation:shimmer 1s infinite;"></div></div></div>`;
+            }
+
+            function startDiag() {
+                document.getElementById('diagLoading').style.display = 'block';
+                setTimeout(() => navigateTo('ai-diagnosis-result'), 1500);
+            }
+
+            function buildAIDiagResult(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>📊 诊断报告</div>
+                <div class="card" style="text-align:center;"><div class="score-circle">78%</div><p>综合胜诉参考指数</p></div>
+                <div class="card"><p><strong>类型：</strong>民间借贷纠纷</p><p><strong>证据完整度：</strong>70%<span class="badge badge-warning">缺转账凭证</span></p><p><strong>风险：</strong>⚠️中等</p></div>
+                <div class="card"><p><strong>💡AI建议：</strong>补充银行流水，发送催款函。</p></div>
+                <div style="padding:0 14px;display:flex;gap:6px;"><div class="btn btn-sm" onclick="navigateTo('evidence-gap')">缺证分析</div><div class="btn btn-outline btn-sm" onclick="navigateTo('lawyer-recommend')">推荐律师</div></div>`;
+            }
+
+            function buildAIHealth(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>🩺 AI法律体检</div>
+                <div class="card" style="text-align:center;"><div class="score-circle">81</div><p>案件健康度：良好</p></div>
+                <div class="card"><p>证据健康度：72%</p><div class="progress-bar"><div class="progress-fill" style="width:72%;"></div></div><p>程序健康度：90%</p><div class="progress-bar"><div class="progress-fill" style="width:90%;"></div></div></div>`;
+            }
+
+            // ===================== 证据中心 =====================
+            function buildEvidenceCenter(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>📁 证据中心</div>
+                <div class="card"><p><strong>证据概览：</strong>必备3项 | 缺失1项</p><div class="progress-bar"><div class="progress-fill" style="width:65%;"></div></div></div>
+                ${[{n:'借条照片',s:'已上传',b:'badge-success'},{n:'微信转账记录',s:'已上传',b:'badge-success'},{n:'催款聊天记录',s:'已上传',b:'badge-success'},{n:'银行流水',s:'缺失',b:'badge-danger'},{n:'证人证言',s:'待收集',b:'badge-warning'}].map(e=>`
+                <div class="card" style="display:flex;align-items:center;gap:8px;" onclick="navigateTo('evidence-analysis')"><span>📄</span><div style="flex:1;"><strong>${e.n}</strong></div><span class="badge ${e.b}">${e.s}</span></div>`).join('')}
+                <div style="padding:0 14px;display:flex;gap:4px;flex-wrap:wrap;">
+                  <div class="btn btn-sm" onclick="navigateTo('evidence-upload')">+上传</div>
+                  <div class="btn btn-sm" onclick="navigateTo('evidence-ocr')">🔍OCR识别</div>
+                  <div class="btn btn-outline btn-sm" onclick="navigateTo('evidence-timeline')">时间轴</div>
+                  <div class="btn btn-outline btn-sm" onclick="navigateTo('evidence-graph')">关系图</div>
+                  <div class="btn btn-outline btn-sm" onclick="navigateTo('evidence-gap')">缺证分析</div>
+                </div>`;
+            }
+
+            function buildEvUpload(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>📤 上传证据</div>
+                <div class="card" style="text-align:center;padding:25px;border:2px dashed var(--border);border-radius:18px;margin:14px;"><p style="font-size:36px;">📎</p><p>点击或拖拽上传</p><p style="font-size:10px;color:var(--text-secondary);">支持图片、PDF、语音</p></div>
+                <div style="padding:0 14px;"><div class="btn btn-lg" onclick="showToast('上传成功！AI识别中…');setTimeout(()=>navigateTo('evidence-ocr'),800);">确认上传</div></div>`;
+            }
+
+            function buildEvOCR(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>🔍 OCR识别</div>
+                <div class="card"><p><strong>识别结果：</strong></p><p>📄借条内容：今借到李四人民币伍万元整…</p><p>📅借款日期：2023年8月15日</p><p>💰金额：50,000元</p><div class="btn btn-sm">✅确认并归档</div></div>`;
+            }
+
+            function buildEvAnalysis(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>🤖 AI证据分析</div>
+                <div class="card"><p><strong>证据完整度：</strong>72/100</p><div class="progress-bar"><div class="progress-fill" style="width:72%;"></div></div><p>🔴关键缺失：银行转账凭证</p></div>
+                <div class="card"><p>✅借条照片—证明力较高</p><p>✅微信记录—可证明催款</p><p>⚠️转账截图—建议补银行流水</p></div>`;
+            }
+
+            function buildEvGap(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>🔍 AI缺证分析</div>
+                <div class="card"><p><strong>必备证据缺失：</strong></p><p>🔴银行转账凭证—直接影响金额认定</p><p>🟡证人证言—可辅助证明</p></div>
+                <div class="card"><p><strong>补充建议：</strong>去银行打印2023年8月交易流水，或提供微信转账电子凭证。</p></div>`;
+            }
+
+            function buildEvTimeline(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>⏳ 证据时间轴</div>
+                <ul style="border-left:2px solid var(--accent);padding-left:16px;margin:10px 16px;list-style:none;">
+                <li style="margin-bottom:12px;">✅<strong>2023-08-15</strong> 借条·转账</li>
+                <li style="margin-bottom:12px;">✅<strong>2024-01-10</strong> 催款记录</li>
+                <li style="margin-bottom:12px;">⚠️<strong>待补充</strong> 银行流水</li></ul>`;
+            }
+
+            function buildEvGraph(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>🕸️ 证据关系图</div>
+                <div class="card" style="text-align:center;padding:30px;">
+                  <p>借条 ←→ 转账记录</p><p style="font-size:10px;color:var(--text-secondary);">互相佐证</p>
+                  <p>催款记录 → 证明时效中断</p><p>银行流水 ← 缺失</p>
+                </div>`;
+            }
+
+            // ===================== 诉讼导航 =====================
+            function buildLawsuitNav(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>⚖️ 诉讼导航</div>
+                ${['整理证据','发送催款函','保存记录','准备材料','生成起诉状','网上立案','缴费','等待开庭'].map((s,i)=>`
+                <div style="display:flex;align-items:center;gap:8px;padding:6px 14px;"><div style="width:24px;height:24px;border-radius:12px;background:${i<3?'var(--success)':'var(--accent-gradient)'};color:#FFF;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;">${i+1}</div><span>${s}</span><span style="font-size:10px;color:var(--text-secondary);">${i<3?'✅':'待完成'}</span></div>`).join('')}
+                <div style="padding:0 14px;"><div class="btn btn-lg" onclick="navigateTo('document-gen')">📝 生成起诉状</div></div>`;
+            }
+
+            function buildLimitation(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>⏳ 时效助手</div>
+                <div class="card"><input class="input-field" type="date" value="2023-08-15" id="ld1"><input class="input-field" type="date" value="2024-01-10" id="ld2"><div class="btn btn-lg" onclick="calcLim()">计算</div><div id="limRes" style="margin-top:8px;"></div></div>`;
+            }
+
+            function calcLim() {
+                const d1 = document.getElementById('ld1')?.value;
+                const d2 = document.getElementById('ld2')?.value;
+                if (!d1 || !d2) return;
+                const start = new Date(d2 > d1 ? d2 : d1);
+                const dead = new Date(start);
+                dead.setFullYear(dead.getFullYear() + 3);
+                const diff = Math.ceil((dead - new Date()) / (1000 * 60 * 60 * 24));
+                const el = document.getElementById('limRes');
+                if (el) el.innerHTML = diff < 0 ? `<p style="color:var(--danger);">⚠️已过${Math.abs(diff)}天</p>` :
+                    `<p style="color:var(--success);">✅剩余约${diff}天</p>`;
+            }
+
+            function buildDocGen(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>📝 AI文书</div>
+                ${['起诉状','答辩状','催款函','律师函','和解协议','证据目录'].map(d=>`<div class="card" onclick="navigateTo('document-edit')">📄 ${d}<span class="badge badge-ai" style="float:right;">AI生成</span></div>`).join('')}`;
+            }
+
+            function buildDocEdit(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>✏️ 编辑文书</div>
+                <div class="card"><textarea class="textarea-field" style="min-height:180px;">民事起诉状\n原告：李四\n被告：张三\n诉讼请求：判令偿还借款5万元及利息…</textarea>
+                <div style="display:flex;gap:6px;"><div class="btn btn-sm">💾保存</div><div class="btn btn-outline btn-sm">📥导出PDF</div></div></div>`;
+            }
+
+            function buildMockCourt(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>🏛️ 模拟法庭</div>
+                <div class="card" style="text-align:center;"><p style="font-size:36px;">🏛️</p><p>AI模拟庭审</p></div>
+                <div style="padding:0 14px;display:flex;gap:6px;"><div class="btn btn-sm" onclick="navigateTo('mock-judge')">👨‍⚖️法官提问</div><div class="btn btn-outline btn-sm" onclick="navigateTo('mock-defendant')">🛡️被告抗辩</div></div>`;
+            }
+
+            function buildMockJudge(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>👨‍⚖️ AI法官</div>
+                <div class="card"><p><strong>AI法官：</strong>请说明借款时间和交付方式。</p></div><div class="card"><p><strong>AI法官：</strong>被告是否承认过债务？</p></div>`;
+            }
+
+            function buildMockDef(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>🛡️ AI被告抗辩</div>
+                <div class="card"><p>对方可能主张：1.已还款 2.赠与 3.超时效</p><p><strong>AI反驳：</strong>保存催款记录证明时效中断。</p></div>`;
+            }
+
+            function buildFeeCalc(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>💰 费用计算</div>
+                <div class="card"><input class="input-field" placeholder="争议金额" value="50000" id="feeIn"><div class="btn btn-lg" onclick="calcFee()">计算</div><div id="feeRes"></div></div>`;
+            }
+
+            function calcFee() {
+                const v = parseFloat(document.getElementById('feeIn')?.value) || 0;
+                const el = document.getElementById('feeRes');
+                if (el) el.innerHTML =
+                    `<p>诉讼费约：¥${Math.max(50,v*0.025).toFixed(0)}</p><p>保全费约：¥${Math.max(30,v*0.01).toFixed(0)}</p>`;
+            }
+
+            function buildCourtFind(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>📍 法院查询</div>
+                <div class="card"><p><strong>推荐：</strong>北京市朝阳区人民法院</p><p>📞010-8598xxxx</p><div class="btn btn-sm">🗺️导航</div></div>`;
+            }
+
+            function buildLawyer(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>👨‍⚖️ 律师服务</div>
+                <div class="card"><p>AI已整理案件摘要，可一键发送律师。</p><div class="btn btn-lg" onclick="showToast('已发送！')">📤一键发送</div></div>`;
+            }
+
+            function buildRoadmap(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>🗺️ 路线图</div>
+                <div class="card"><p>已完成3/8步</p><div class="progress-bar"><div class="progress-fill" style="width:37%;"></div></div></div>`;
+            }
+
+            function buildTasks(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>📌 任务中心</div>
+                <div class="card"><p>□打印微信账单</p><p>□发送催款消息</p><p>✅整理借条</p></div>`;
+            }
+
+            function buildArchive(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>📂 案件档案</div>
+                <div class="card"><strong>借款纠纷</strong><p>创建于2024-01-15</p></div>`;
+            }
+
+            function buildKnowledge(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>📘 法律知识</div>
+                <div class="grid-2">
+                  <div class="card">民间借贷</div><div class="card">合同纠纷</div>
+                  <div class="card">劳动法</div><div class="card">婚姻家庭</div>
+                </div>
+                <div class="card" onclick="navigateTo('knowledge-graph')">🕸️ 知识图谱可视化</div>`;
+            }
+
+            function buildKnowledgeGraph(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>🕸️ 知识图谱</div>
+                <div class="card" style="text-align:center;padding:30px;">
+                  <p>民间借贷 → 民法典第667条</p><p>↓</p><p>诉讼时效 → 3年</p><p>↓</p><p>证据规则 → 借条+转账</p>
+                </div>`;
+            }
+
+            function buildEmotion(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>🧠 AI情绪识别</div>
+                <div class="card"><p>检测到<strong>焦虑情绪</strong></p><p>💡建议：避免冲动，依法维权。</p></div>`;
+            }
+
+            function buildEnterprise(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>🏢 企业专区</div>
+                <div class="card" onclick="navigateTo('enterprise-report')">🏥 AI企业法治体检</div>
+                <div class="card" onclick="navigateTo('contract-review-ai')">📋 AI合同审查</div>`;
+            }
+
+            function buildEntReport(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>📊 企业风险报告</div>
+                <div class="card" style="text-align:center;"><div class="score-circle">73</div><p>企业法律健康度</p></div>`;
+            }
+
+            function buildContractReviewAI(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>📋 AI合同审查</div>
+                <div class="card"><p>上传合同文件</p><div style="border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;">📎点击上传</div></div>
+                <div class="card"><p><strong>审查结果：</strong></p><p>⚠️第5条：违约金过高</p><p>⚠️第8条：责任限制模糊</p></div>`;
+            }
+
+            function buildCalendar(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>📅 法律日历</div>
+                <div class="card"><p>📌6月30日—举证期限</p><p>📌7月15日—开庭</p></div>`;
+            }
+
+            function buildProfile(page) {
+                page.innerHTML = `
+                <div class="nav-header"><span>👤 个人中心</span></div>
+                <div class="card" style="text-align:center;"><div style="width:48px;height:48px;border-radius:24px;background:var(--accent-gradient);margin:0 auto;display:flex;align-items:center;justify-content:center;color:#FFF;font-size:22px;">👤</div><p>用户</p></div>
+                ${[{l:'我的案件',p:'archive'},{l:'我的证据',p:'evidence-center'},{l:'我的文书',p:'document-gen'},{l:'消息中心',p:'messages'},{l:'法律知识',p:'knowledge'},{l:'设置',p:'settings'},{l:'隐私安全',p:'privacy'},{l:'帮助中心',p:'help'}].map(i=>`<div class="card" onclick="navigateTo('${i.p}')">${i.l}<span style="float:right;">→</span></div>`).join('')}
+                <div class="card" onclick="toggleDark()">🌓 切换模式<span style="float:right;">${isDarkMode?'🌙':'☀️'}</span></div>
+                <div class="card" onclick="navigateTo('login')">🚪 退出登录</div>`;
+            }
+
+            function toggleDark() {
+                isDarkMode = !isDarkMode;
+                if (isDarkMode) document.body.classList.add('dark-mode');
+                else document.body.classList.remove('dark-mode');
+                document.getElementById('phoneFrame').style.background = isDarkMode ? '#0F172A' : '#000';
+                showToast(isDarkMode ? '深色模式' : '浅色模式');
+                renderPage(currentPageId);
+            }
+
+            function buildSettings(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>⚙️ 设置</div>
+                <div class="card">通知设置</div><div class="card">意见反馈</div><div class="card" onclick="navigateTo('privacy')">隐私管理</div>`;
+            }
+
+            function buildPrivacy(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>🔒 隐私安全</div>
+                <div class="card"><p>数据加密存储</p></div><div class="card"><p>证据仅保存在本地</p></div><div class="card"><p>可随时删除所有数据</p></div>`;
+            }
+
+            function buildMessages(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>💬 消息</div>
+                <div class="card"><p>📩律师回复：案件已收到</p><p style="font-size:10px;color:var(--text-secondary);">2小时前</p></div>`;
+            }
+
+            function buildHelp(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>❓ 帮助</div>
+                <div class="card"><p>Q:如何使用AI诊断？</p><p>A:首页点击AI案件诊断输入案情即可。</p></div>`;
+            }
+
+            // ===================== AI法律服务中心 =====================
+            function buildLawCenter(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>⚖️ AI法律服务中心</div>
+                <div class="card card-accent" style="text-align:center;"><p style="font-size:13px;">安全·透明·高效</p></div>
+                <div class="grid-2">
+                  <div class="card" onclick="navigateTo('nearby-firms')">📍 附近律所</div>
+                  <div class="card" onclick="navigateTo('lawyer-recommend')">🤖 AI律师推荐</div>
+                  <div class="card" onclick="navigateTo('fee-analysis')">💰 收费分析</div>
+                  <div class="card" onclick="navigateTo('fee-quote-check')">🔍 报价审查</div>
+                  <div class="card" onclick="navigateTo('contract-review')">📋 合同审查</div>
+                  <div class="card" onclick="navigateTo('lawyer-comm')">💬 沟通助手</div>
+                  <div class="card" onclick="navigateTo('consult-records')">📝 咨询记录</div>
+                  <div class="card" onclick="navigateTo('lawyer-compare')">📊 方案对比</div>
+                </div>
+                <div class="grid-2">
+                  <div class="card" onclick="navigateTo('fee-budget')">🧮 费用预算</div>
+                  <div class="card" onclick="navigateTo('risk-warning')">⚠️ 避坑指南</div>
+                  <div class="card" onclick="navigateTo('law-score')">⭐ 服务评分</div>
+                  <div class="card" onclick="navigateTo('second-opinion')">🔄 AI第二意见</div>
+                </div>
+                <div class="card" onclick="navigateTo('lawyer-sim')" style="background:#F0FDF4;">🎯 咨询模拟 — 提前准备高效沟通</div>`;
+            }
+
+            function buildNearbyFirms(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>📍 附近律所<span style="font-size:10px;display:flex;gap:3px;"><span class="chip active">列表</span><span class="chip" onclick="showToast('地图模式开发中')">🗺️地图</span></span></div>
+                ${[{n:'正阳律师事务所',d:'1.2km',s:'4.8',f:'民商事·借贷',y:'15年'},{n:'京衡律师事务所',d:'2.5km',s:'4.6',f:'劳动法·婚姻',y:'12年'},{n:'天达共和律所',d:'3.1km',s:'4.9',f:'知识产权·公司',y:'20年'}].map(f=>`
+                <div class="card" onclick="showToast('查看律所详情')">
+                  <div style="display:flex;justify-content:space-between;"><strong>${f.n}</strong><span class="badge badge-success">⭐${f.s}</span></div>
+                  <p style="font-size:11px;">📍${f.d} | ${f.f} | 执业${f.y}</p>
+                  <div style="display:flex;gap:4px;margin-top:4px;"><span class="btn btn-sm">📞</span><span class="btn btn-outline btn-sm">🗺️导航</span></div>
+                </div>`).join('')}`;
+            }
+
+            function buildLawyerRec(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>🤖 AI律师推荐</div>
+                <div class="card"><p><strong>基于您的案件：</strong>民间借贷·5万元</p></div>
+                <div class="card"><div style="display:flex;gap:8px;"><div style="width:40px;height:40px;border-radius:20px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;color:#FFF;">👨‍⚖️</div><div><strong>王律师</strong><p style="font-size:11px;">擅长民间借贷·12年</p><span class="badge badge-success">推荐95%</span></div></div></div>`;
+            }
+
+            function buildFeeAnalysis(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>💰 AI收费分析</div>
+                <div class="card"><input class="input-field" placeholder="案件类型" value="民间借贷"><input class="input-field" placeholder="金额(元)" value="200000"><input class="input-field" placeholder="城市" value="杭州"><div class="btn btn-lg" onclick="showToast('分析完成')">分析</div></div>
+                <div class="card"><p>预计律师费：¥5,000-12,000</p><p>风险代理：5%-15%</p><p style="font-size:10px;opacity:0.7;">⭐仅供参考</p></div>`;
+            }
+
+            function buildFeeQuote(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>🔍 报价审查</div>
+                <div class="card"><p>上传报价单</p><div style="border:2px dashed var(--border);border-radius:12px;padding:18px;text-align:center;">📎点击上传</div></div>
+                <div class="card"><p>✅案件受理费—合理</p><p>⚠️材料整理费—建议确认</p><p>🔴沟通服务费—需谨慎</p></div>`;
+            }
+
+            function buildContractReview(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>📋 合同审查</div>
+                <div class="card"><p>上传委托代理合同</p><div style="border:2px dashed var(--border);border-radius:12px;padding:18px;text-align:center;">📎点击上传</div></div>
+                <div class="card"><p>⚠️代理范围模糊</p><p>⚠️退款约定不明确</p></div>`;
+            }
+
+            function buildLawyerComm(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>💬 沟通助手</div>
+                <div class="card"><p><strong>AI已整理：</strong></p><p>📋案件摘要：民间借贷·5万元</p><p>⏳时间轴：2023.8→2024.1</p><div class="btn btn-sm">📤发送律师</div></div>`;
+            }
+
+            function buildConsultRecords(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>📝 咨询记录</div>
+                <div class="card"><strong>2024-01-20</strong><p>王律师·¥500/小时</p></div>
+                <div class="card"><strong>2024-02-05</strong><p>李律师·¥300/半小时</p></div>`;
+            }
+
+            function buildLawyerCompare(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>📊 方案对比</div>
+                <div class="card"><div class="compare-table"><div class="header-col"></div><div><strong>王律师</strong></div><div><strong>李律师</strong></div><div class="header-col">收费</div><div>¥8000</div><div>¥6000</div><div class="header-col">执业</div><div>12年</div><div>8年</div></div></div>`;
+            }
+
+            function buildFeeBudget(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>🧮 费用预算</div>
+                <div class="card"><input class="input-field" placeholder="案件金额" value="50000"><div class="btn btn-lg" onclick="showToast('预算生成中')">生成</div></div>
+                <div class="card"><p>诉讼费：¥1,250</p><p>律师费参考：¥3,000-8,000</p><p><strong>预估总成本：¥5,500-10,500</strong></p></div>`;
+            }
+
+            function buildRiskWarning(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>⚠️ 避坑指南</div>
+                <div class="card"><p>🚫不信"百分百胜诉"</p></div><div class="card"><p>🚫不信"法院有人"</p></div>
+                <div class="card"><p>✅签订正式合同</p></div><div class="card"><p>✅索要正规发票</p></div>`;
+            }
+
+            function buildLawScore(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>⭐ AI服务评分</div>
+                <div class="card" style="text-align:center;"><div class="score-circle">87</div><p>综合推荐指数</p></div>`;
+            }
+
+            function buildSecondOpinion(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>🔄 AI第二意见</div>
+                <div class="card"><p>上传律师方案</p><div style="border:2px dashed var(--border);border-radius:12px;padding:18px;text-align:center;">📎上传</div></div>
+                <div class="card"><p>📌可确认：诉讼路径是否最优</p><p>📌费用组成是否完整</p></div>`;
+            }
+
+            function buildCaseReadiness(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>📊 案件准备度</div>
+                <div class="card" style="text-align:center;"><div class="score-circle">82</div><p>综合准备度</p></div>
+                <div class="card"><p>证据完整度：88%</p><div class="progress-bar"><div class="progress-fill" style="width:88%;"></div></div><p>程序准备度：75%</p><div class="progress-bar"><div class="progress-fill" style="width:75%;"></div></div></div>`;
+            }
+
+            function buildLawyerSim(page) {
+                page.innerHTML = `
+                <div class="nav-header"><button class="nav-back" onclick="goBack()">←</button>🎯 咨询模拟</div>
+                <div class="card"><p><strong>律师第一问：</strong>请说明借款时间、金额和交付方式。</p></div>
+                <div class="card"><p><strong>律师第二问：</strong>是否有书面借条？</p></div>
+                <div class="card"><p>💡提前准备这些答案，咨询效率提升50%</p></div>`;
+            }
+
+            // ===================== 状态页面 =====================
+            function buildEmpty(page) {
+                page.innerHTML =
+                    `<div style="text-align:center;padding:60px 20px;"><p style="font-size:40px;">📭</p><p>暂无内容</p></div>`;
+            }
+
+            function buildLoading(page) {
+                page.innerHTML =
+                    `<div style="text-align:center;padding:80px 20px;"><div style="width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto;"></div><p style="margin-top:12px;">加载中…</p></div>`;
+            }
+
+            function buildError(page) {
+                page.innerHTML = `
+                <div style="text-align:center;padding:70px 20px;"><p style="font-size:40px;">⚠️</p><p>加载失败</p><div class="btn btn-sm" onclick="goBack()">返回</div></div>`;
+            }
+
+            function buildNotFound(page) {
+                page.innerHTML = `
+                <div style="text-align:center;padding:70px 20px;"><p style="font-size:50px;">🔍</p><p>404 - 页面未找到</p><div class="btn btn-sm" onclick="switchTab('home')">返回首页</div></div>`;
+            }
+
+            // ===================== 事件监听 =====================
+            tabBar.addEventListener('click', (e) => {
+                const ti = e.target.closest('.tab-item');
+                if (ti) switchTab(ti.dataset.tab);
+            });
+
+            window.navigateTo = navigateTo;
+            window.goBack = goBack;
+            window.switchTab = switchTab;
+            window.showToast = showToast;
+            window.sendIntakeMsg = sendIntakeMsg;
+            window.toggleDark = toggleDark;
+            window.calcLim = calcLim;
+            window.calcFee = calcFee;
+            window.startDiag = startDiag;
+
+            // 启动
+            renderPage('splash');
+            setTimeout(() => { if (currentPageId === 'splash') switchTab('home'); }, 2000);
+
+            console.log('⚖️ 民事法律助手 · 完整版');
+            console.log('✅ 50+页面 | OCR识别 | 证据关系图 | 知识图谱 | 隐私安全 | 登录注册 | 404页面');
+            console.log('📍 新增：AI法律服务中心（附近律所/收费分析/报价审查/合同审查/避坑指南）');
+        })();
+    </script>
+</body>
+</html>
